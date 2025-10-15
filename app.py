@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, send_file
-from downloader import video_download, audio_download  # your own module
+from downloader import video_download, audio_download 
+from verif import data_fetch, is_valid_youtube
 import os
 app = Flask(__name__)
 
@@ -46,6 +47,22 @@ def Download(url, format_):
         return video_download(url)
     else:
         return None  # handle invalid format gracefully
+
+@app.route('/verification', methods=['POST'])
+def url_verif():
+    data = request.get_json()
+    if not data or not 'url' in data:
+        return jsonify({'error': 'Please provide a URL'}), 400
+    url = data['url']
+    if not is_valid_youtube(url):
+        return jsonify({'error': 'URL is not valid'}), 400
+    try:
+        video_info = data_fetch(url)
+    except:
+        with Exception as E:
+            return jsonify({'error': f'Failed to fetch video data: {str(E)}'}), 500
+    return jsonify(video_info)
+    
 
 
 if __name__ == '__main__':
