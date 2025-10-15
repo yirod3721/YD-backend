@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS, cross_origin
 from downloader import video_download, audio_download 
 from verif import data_fetch, is_valid_youtube
 import os
 app = Flask(__name__)
 
 @app.route('/downloads', methods=['POST'])
+@cross_origin()
 def handle_post_request():
     data = request.get_json()
 
@@ -49,6 +51,7 @@ def Download(url, format_):
         return None  # handle invalid format gracefully
 
 @app.route('/verification', methods=['POST'])
+@cross_origin()
 def url_verif():
     data = request.get_json()
     if not data or not 'url' in data:
