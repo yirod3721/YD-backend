@@ -1,7 +1,7 @@
 
 ---
 
-# 🎬 YouTube Downloader API — Usage Guide
+# YouTube Downloader API — Usage Guide
 
 ## Base URL
 
