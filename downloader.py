@@ -1,4 +1,4 @@
-import yt_dlp
+import yt_dlp, os
 def video_download(url):
     ydl_opts = {
         'format': 'mp4',
@@ -9,7 +9,9 @@ def video_download(url):
             ydl.download(url)
             info = ydl.extract_info(url)
             filepath = ydl.prepare_filename(info)
-            return 0
+            filepath = os.path.splitext(filepath)[0] + '.mp4'
+            print(f"Path is {filepath}")
+            return filepath
     except:
         with yt_dlp.utils.DownloadError as e:
             print("ERROR", e)
@@ -32,6 +34,7 @@ def audio_download(url):
     }
     ydl_opt_audio = {
         'writethumbnail': True,
+        'outtmpl': 'downloads/%(title)s.%(ext)s',
         'format': 'bestaudio/best',
         'postprocessors': [{
         'key': 'FFmpegExtractAudio',
@@ -50,7 +53,9 @@ def audio_download(url):
             ydl.download(url)
             info = ydl.extract_info(url)
             filepath = ydl.prepare_filename(info)
-            return 0, filepath
+            filepath = os.path.splitext(filepath)[0] + '.mp3'
+            print(f"Path is {filepath}")
+            return filepath
     except yt_dlp.utils.DownloadError as e:
         print("Download Utils", e)
         return 1
