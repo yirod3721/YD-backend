@@ -15,3 +15,5 @@ git_uploader.py
 # Environment
 .env
 venv/
+*.mp3
+*.mp4
