@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS, cross_origin
 from downloader import video_download, audio_download 
 from verif import data_fetch, is_valid_youtube
+from file_manager import setup_folders, cleanup_temp
 import os
 app = Flask(__name__)
 
@@ -46,6 +47,7 @@ def Download(url, format_):
         print("APP MP3 ON")
         return audio_download(url)
     elif format_ == 'mp4':
+        print("APP MP4 ON")
         return video_download(url)
     else:
         return None  # handle invalid format gracefully
@@ -69,4 +71,6 @@ def url_verif():
 
 
 if __name__ == '__main__':
+    setup_folders()
+    cleanup_temp()
     app.run(debug=True)

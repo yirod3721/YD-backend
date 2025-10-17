@@ -1,5 +1,5 @@
 import yt_dlp
-
+from file_manager import cleanup_temp
 def is_valid_youtube(url):
     try:
         with yt_dlp.YoutubeDL({}) as ydl:
@@ -34,6 +34,6 @@ def data_fetch(url):
         'duration': info.get('duration'),           # seconds
         'thumbnail': info.get('thumbnail'),         # URL to image
     }
-
+    cleanup_temp()
     return data
 

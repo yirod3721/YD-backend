@@ -1,8 +1,10 @@
 import yt_dlp, os
+from file_manager import move_to_final, cleanup_temp
 def video_download(url):
+    temp_out = 'downloads/temp/%(title)s.%(ext)s'
     ydl_opts = {
         'format': 'mp4',
-        'outtmpl': 'downloads/%(title)s.%(ext)s'
+        'outtmpl': temp_out
     }
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -11,7 +13,8 @@ def video_download(url):
             filepath = ydl.prepare_filename(info)
             filepath = os.path.splitext(filepath)[0] + '.mp4'
             print(f"Path is {filepath}")
-            return filepath
+            final_path = move_to_final(filepath, 'video')
+            return final_path
     except:
         with yt_dlp.utils.DownloadError as e:
             print("ERROR", e)
@@ -20,21 +23,10 @@ def video_download(url):
 
 
 def audio_download(url):
-    ydl_opts = {
-        'format': 'bestaudio[abr>=192]/best',
-        'outtmpl': 'downloads/%(title)s.%(ext)s',
-        'postprocessors': [
-            {
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '192',
-
-            }
-        ]
-    }
+    temp_out = 'downloads/temp/%(title)s.%(ext)s'
     ydl_opt_audio = {
         'writethumbnail': True,
-        'outtmpl': 'downloads/%(title)s.%(ext)s',
+        'outtmpl': temp_out,
         'format': 'bestaudio/best',
         'postprocessors': [{
         'key': 'FFmpegExtractAudio',
@@ -55,7 +47,8 @@ def audio_download(url):
             filepath = ydl.prepare_filename(info)
             filepath = os.path.splitext(filepath)[0] + '.mp3'
             print(f"Path is {filepath}")
-            return filepath
+            final_path  = move_to_final(filepath, 'audio')
+            return final_path
     except yt_dlp.utils.DownloadError as e:
         print("Download Utils", e)
         return 1
