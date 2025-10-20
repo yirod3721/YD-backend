@@ -5,10 +5,13 @@ def setup_folders():
     return 0
 def move_to_final(filepath, media_type):
     filename = os.path.basename(filepath)
-    if media_type == "audio":
+    print(media_type)
+    if (media_type == "audio"):
         dest_folder = "downloads/audio"
-    elif media_type == "video":
-        dest_folder == "downloads/video"
+        print(dest_folder)
+    elif (media_type == "video"):
+        dest_folder = "downloads/video"
+        print(dest_folder)
     else:
         print("INVALID PATH")
         return 1
@@ -20,3 +23,11 @@ def cleanup_temp():
     for f in os.listdir(temp_folder):
         os.remove(os.path.join(temp_folder, f))
     return 0
+def cleanup_file():
+    foldera = 'downloads/audio'
+    folderv = 'downloads/video'
+    for f in os.listdir(foldera):
+        os.remove(os.path.join(f, foldera))
+    for f in os.listdir(folderv):
+        os.remove(os.path.join(f, folderv))
+    return 0 

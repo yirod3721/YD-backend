@@ -1,0 +1,20 @@
+fetch("http://192.168.1.105:5000/downloads", {
+  method: "POST",
+  headers:{
+            "Content-Type":"application/json"
+            , "Accept":"application/json"
+            ,"Access-Control-Allow-Origin":"*"
+            ,"Access-Control-Allow-Methods":"GET,POST,OPTIONS"
+            ,"Access-Control-Allow-Headers": "Content-Type , Authorization",
+        }},,
+  body: JSON.stringify({ url: "https://youtu.be/dQw4w9WgXcQ", format: "mp3" })
+)
+.then(r => r.blob())
+.then(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "song.mp3";
+    a.click();
+    URL.revokeObjectURL(url);
+});
