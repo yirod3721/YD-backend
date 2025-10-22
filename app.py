@@ -73,4 +73,4 @@ def url_verif():
 if __name__ == '__main__':
     setup_folders()
     cleanup_temp()
-    app.run(host='0.0.0.0', threaded=False, )
+    app.run(host='0.0.0.0', threaded=True, )
