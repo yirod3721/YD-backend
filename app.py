@@ -1,8 +1,9 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file,Response
 from flask_cors import CORS, cross_origin
-from downloader import video_download, audio_download 
+from downloader import video_download, audio_download, progress_data
 from verif import data_fetch, is_valid_youtube
 from file_manager import setup_folders, cleanup_temp
+import json
 import os
 app = Flask(__name__)
 CORS(app)
@@ -60,6 +61,7 @@ def url_verif():
         return jsonify({'error': 'Please provide a URL'}), 400
     url = data['url']
     if not is_valid_youtube(url):
+        print("Invalid url detected")
         return jsonify({'error': 'URL is not valid'}), 400
     try:
         video_info = data_fetch(url)
@@ -68,9 +70,19 @@ def url_verif():
             return jsonify({'error': f'Failed to fetch video data: {str(E)}'}), 500
     return jsonify(video_info)
     
-
+@app.route('/progress_stream')
+def progress_stream():
+    def generate():
+        last = None
+        while True:
+            if progress_data != last:
+                json_data = json.dumps(progress_data)
+                yield f"data: {json_data}\n\n"
+                last = progress_data.copy()
+    return Response(generate(), mimetype='text/event-stream')
 
 if __name__ == '__main__':
     setup_folders()
     cleanup_temp()
     app.run(host='0.0.0.0', threaded=True, )
+    

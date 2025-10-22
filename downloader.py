@@ -1,11 +1,24 @@
 import yt_dlp, os
 from file_manager import move_to_final, cleanup_temp
+progress_data = {"status": 'idle', "percent": 0}
+def progress_hook(d):
+    if d['status'] == 'downloading':
+        percent = d.get('_percent_str', '0.0%').strip()
+        progress_data["status"] = "downloading"
+        progress_data["percent"] = percent
+    elif d['status'] == 'finished':
+        progress_data["status"] = "finished"
+        progress_data["percent"] = "100%"
+
 
 def video_download(url):
     temp_out = 'downloads/temp/%(title)s.%(ext)s'
     ydl_opts = {
-        'format': 'mp4',
+        'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best',
+        'verbose': True,
+        'extractor_args': {'youtube': {'player_client': ['web', 'android', 'tv']}},
         'cookiefile': 'cookies.txt',
+        'progress_hooks': [progress_hook],
         'outtmpl': temp_out
     }
     try:
@@ -31,6 +44,9 @@ def audio_download(url):
         'writethumbnail': True,
         'outtmpl': temp_out,
         'cookiefile': 'cookies.txt',
+        'verbose': True,
+        'extractor_args': {'youtube': {'player_client': ['web', 'android', 'tv']}},
+        'progress_hooks': [progress_hook],
         'format': 'bestaudio/best',
         'postprocessors': [{
         'key': 'FFmpegExtractAudio',
