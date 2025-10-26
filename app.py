@@ -51,7 +51,7 @@ def Download(url, format_):
         print("APP MP4 ON")
         return video_download(url)
     else:
-        return None  # handle invalid format gracefully
+        return None  
 
 @app.route('/verification', methods=['POST'])
 #@cross_origin()
