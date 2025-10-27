@@ -17,13 +17,13 @@ def handle_post_request():
 
     url = data.get('url')
     format_ = data.get('format')
-
+    id_ = data.get('id')
     if not url or not format_:
         return jsonify({'error': 'Please provide both "url" and "format"'}), 400
 
     # Download the file
     print(f"format is {format_}")
-    filepath = Download(url, format_)
+    filepath = Download(url, format_, id_)
 
     if not filepath or not os.path.exists(filepath):
         return jsonify({'error': 'Download failed or file missing'}), 500
@@ -43,13 +43,13 @@ def handle_post_request():
     )
 
 
-def Download(url, format_):
+def Download(url, format_, id):
     if format_ == 'mp3':
         print("APP MP3 ON")
-        return audio_download(url)
+        return audio_download(url, id)
     elif format_ == 'mp4':
         print("APP MP4 ON")
-        return video_download(url)
+        return video_download(url, id)
     else:
         return None  
 

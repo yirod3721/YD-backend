@@ -11,10 +11,11 @@ def progress_hook(d):
         progress_data["percent"] = "100%"
 
 
-def video_download(url):
+def video_download(url, id):
     temp_out = 'downloads/temp/%(title)s.%(ext)s'
     ydl_opts = {
-        'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best',
+        'format': id,
+        'merge_output_format': 'mp4',
         'verbose': True,
         'extractor_args': {'youtube': {'player_client': ['web', 'android', 'tv']}},
         'cookiefile': 'cookies.txt',
@@ -38,7 +39,7 @@ def video_download(url):
 
 
 
-def audio_download(url):
+def audio_download(url, id):
     temp_out = 'downloads/temp/%(title)s.%(ext)s'
     ydl_opt_audio = {
         'writethumbnail': True,
@@ -47,7 +48,7 @@ def audio_download(url):
         'verbose': True,
         'extractor_args': {'youtube': {'player_client': ['web', 'android', 'tv']}},
         'progress_hooks': [progress_hook],
-        'format': 'bestaudio/best',
+        'format': id,
         'postprocessors': [{
         'key': 'FFmpegExtractAudio',
         'preferredcodec': 'mp3',
